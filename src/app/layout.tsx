@@ -1,12 +1,16 @@
 import "./globals.css";
 
+import { Category } from "@prisma/client";
+import Menu from "@/components/Menu/Menu";
+import { getMenuEntries } from "@/lib/product";
 import styles from "./page.module.scss";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const categories = await getMenuEntries();
   return (
     <html lang="en">
       {/*
@@ -16,7 +20,9 @@ export default function RootLayout({
       <head />
       <body>
         <div className={styles.AppContainer}>
-          <div className={styles.AppMenu}>Menu</div>
+          <div>
+            <Menu categories={categories} />
+          </div>
           <div className={styles.AppContent}>{children}</div>
         </div>
       </body>

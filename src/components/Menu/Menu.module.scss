@@ -1,0 +1,42 @@
+.Menu {
+  gap: 10px;
+  padding: 24px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  color: rgba(66, 66, 66, 0.8);
+}
+
+.Menu-items {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.Menu-primary-row {
+  display: flex;
+  gap: 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.Menu-items-item-primary {
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.Menu-items-item-secondary {
+  margin: 4px 0;
+}
+
+.Menu-items-item-primary,
+.Menu-items-item-secondary {
+  cursor: pointer;
+}
+
+.Menu-items-item-primary:hover,
+.Menu-items-item-secondary:hover {
+  text-decoration: underline;
+}

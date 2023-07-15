@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Brand {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique @db.VarChar(256)
+  details String?  @db.VarChar(256)
+  images  String[]
+
+  Product Product[]
+}
+
+model Category {
+  id                Int      @id @default(autoincrement())
+  name              String   @unique @db.VarChar(256)
+  details           String?  @db.VarChar(256)
+  images            String[]
+  isPrimaryCategory Boolean  @default(false) @map("is_primary_category")
+
+  Product           Product[]
+  SecondaryCategory SecondaryCategory[]
+}
+
+model Color {
+  id        Int      @id @default(autoincrement())
+  color     String   @db.VarChar(48)
+  details   String?  @db.VarChar(256)
+  productId Int
+  quantity  Int      @default(0)
+  price     Float?
+  images    String[]
+
+  Product Product @relation(fields: [productId], references: [id])
+}
+
+model Size {
+  id        Int      @id @default(autoincrement())
+  size      String   @db.VarChar(48)
+  details   String?  @db.VarChar(256)
+  productId Int
+  quantity  Int      @default(0)
+  price     Float?
+  images    String[]
+
+  Product Product @relation(fields: [productId], references: [id])
+}
+
+model Product {
+  id                Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now()) @map("created_at")
+  deletedAt         DateTime?
+  name              String    @db.VarChar(256)
+  primaryCategoryId Int       @map("primary_category_id")
+  brandId           Int       @map("brand_id")
+  details           Json
+  quantity          Int       @default(0)
+  price             Float?
+  images            String[]
+  color             String?
+  size              String?
+
+  Brand             Brand               @relation(fields: [brandId], references: [id])
+  Category          Category            @relation(fields: [primaryCategoryId], references: [id])
+  Color             Color[]
+  Size              Size[]
+  SecondaryCategory SecondaryCategory[]
+}
+
+model SecondaryCategory {
+  productId  Int
+  categoryId Int
+
+  Product  Product  @relation(fields: [productId], references: [id])
+  Category Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([productId, categoryId])
+}
+
+model User {
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now()) @map("created_at")
+  firstName   String      @map("first_name")
+  middleName  String      @map("middle_name")
+  lastName    String      @map("last_name")
+  email       String      @unique
+  accountType AccountType @default(USER)
+  password    String      @db.Char(64)
+  lastLogInAt DateTime    @map("last_log_in_at")
+}
+
+enum AccountType {
+  USER
+  AGENT
+  ADMIN
+}
