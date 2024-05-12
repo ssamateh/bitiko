@@ -37,6 +37,7 @@ const Login = () => {
   const [loginErrorMessage, setLoginErrorMessage] = useState<string>();
   const handleLogin = async () => {
     setHasSubmitted(true);
+    setLoginErrorMessage(undefined);
 
     if (hasInvalidEmail || !password) {
       return;
@@ -105,7 +106,9 @@ const Login = () => {
             : undefined
         }
       />
-      <Toast type="error" message={loginErrorMessage} />
+      {!!loginErrorMessage && (
+        <Toast key="login-error" type="error" message={loginErrorMessage} />
+      )}
     </Theme>
   );
 };
