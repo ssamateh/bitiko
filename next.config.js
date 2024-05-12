@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
   images: {
     remotePatterns: [
       {
@@ -10,6 +7,9 @@ const nextConfig = {
       },
       {
         hostname: "akiesu-images.s3.amazonaws.com",
+      },
+      {
+        hostname: "storage.googleapis.com",
       },
     ],
   },

@@ -5,8 +5,14 @@ export enum PrimaryCategory {
   GROCERY_FOOD_AND_DRINKS = "Grocery, Food & Drinks",
   PERSONAL_HEALTH_AND_BEAUTY = "Personal, Health & Beauty",
   ELECTRONICS_AND_APPLIANCES = "Electronics & Appliances",
-  HOUSEHOLD_ESSENTIALS = "Household Essentials",
+  HOUSEHOLD_AND_KITCHEN_ESSENTIALS = "Household & Kitchen Essentials",
   CLOTH_SHOES_JEWELRY_AND_WATCHES = "Clothing, Shoes, Jewelry & Watches",
   PET_SUPPLIES = "Pet Supplies",
   OTHER = "Others",
+}
+
+export const Unknown = "Unknown";
+
+export enum Brands {
+  Unknown = "Unknown",
 }

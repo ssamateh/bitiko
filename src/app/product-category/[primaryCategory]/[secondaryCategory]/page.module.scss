@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  align-self: flex-start;
+
+  .row {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    // justify-content: space-between;
+
+    > div {
+      border-bottom: 1px solid lightgray;
+    }
+
+    > div:only-child,
+    > div:not(:last-child) {
+      border-right: 1px solid lightgray;
+    }
+  }
+}
+
+// Mobile

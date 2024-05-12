@@ -1,11 +1,49 @@
-import { Category } from "@prisma/client";
+import { Category, Product, Color, Size, User } from "@prisma/client";
 
-interface MenuItem extends Omit<Category, "isPrimaryCategory"> {}
+interface CategoryEntry extends Omit<Category, "isPrimaryCategory"> {}
 
-export enum Color {
+export enum Colors {
   primaryBg = "rgba(0,128,128, .7)",
 }
 
-export interface MenuEntry extends MenuItem {
-  subCategories: MenuItem[];
+export interface MenuEntry extends CategoryEntry {
+  subCategories: CategoryEntry[];
+}
+
+interface ProductColor extends Omit<Color, "productId"> {}
+
+interface ProductSize extends Omit<Size, "productId"> {}
+
+interface ProductBrand extends Omit<Size, "productId"> {}
+
+export interface ProductCardData
+  extends Omit<
+    Product,
+    "createdAt" | "deletedAt" | "primaryCategoryId" | "brandId"
+  > {
+  brand: ProductBrand;
+  colors?: ProductColor[];
+  sizes?: ProductSize[];
+  secondaryCategories?: CategoryEntry[];
+  primaryCategory?: CategoryEntry;
+}
+
+export type VoidMethod = () => void;
+
+export interface OnboardingUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginUser {
+  email: string;
+  password: string;
+}
+
+export interface SanitizedUser {
+  firstName: string;
+  lastName: string;
+  middleName: string | null;
 }

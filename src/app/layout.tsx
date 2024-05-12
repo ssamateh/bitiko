@@ -1,6 +1,5 @@
 import "./globals.css";
 
-import { Category } from "@prisma/client";
 import Menu from "@/components/Menu/Menu";
 import { getMenuEntries } from "@/lib/product";
 import styles from "./page.module.scss";

@@ -1,0 +1,15 @@
+@mixin container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.container {
+  @include container;
+  width: 400px;
+}
+
+.formContainer {
+  @include container;
+  padding: 24px;
+}
