@@ -40,3 +40,9 @@
 .Menu-items-item-secondary:hover {
   text-decoration: underline;
 }
+
+.User {
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+}
