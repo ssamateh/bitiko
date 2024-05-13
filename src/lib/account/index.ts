@@ -3,6 +3,8 @@ import { LoginUser, OnboardingUser, SanitizedUser } from "@/interface";
 import { scrypt } from "crypto";
 import jwt from "jsonwebtoken";
 import { env } from "process";
+import WelcomeEmail from "emails/welcome";
+import { sendEmail } from "../emailClient";
 
 const SALT = "b8d65261-eb93-45d8-a72e-7f8b71f2b7c1";
 
@@ -61,7 +63,19 @@ export const onboard = async (user: OnboardingUser): Promise<void> =>
       }
     })
     .then((password) => prisma.user.create({ data: { ...user, password } }))
-    .then((account) => {
-      // TODO: Send welcome email
+    .then(async (account) => {
+      try {
+        await sendEmail({
+          to: account.email,
+          from: "Lumo <support@lumo-gambia.com>",
+          subject: "Welcome to Lumo Gambia",
+          template: WelcomeEmail({
+            firstName: account.firstName,
+          }),
+        });
+      } catch (e) {
+        console.error(e);
+        // TODO: log email failure
+      }
       return;
     });
