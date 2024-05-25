@@ -1,12 +1,12 @@
 "use client";
 
 import Theme from "@/app/Providers/Theme";
+import { Loader } from "@/components/Loader/Loader";
 import { Toast } from "@/components/Toast/Toast";
 import { validateEmail, validateName } from "@/lib/forms-and-validations";
 import { Button, Card, Divider, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { ChangeEventHandler, HTMLInputTypeAttribute, useState } from "react";
-import { z } from "zod";
 import styles from "./page.module.scss";
 
 interface FieldProps {
@@ -22,11 +22,7 @@ type Account = {
   firstName: FieldProps;
   lastName: FieldProps;
   email: FieldProps;
-  password: FieldProps;
-  confirmPassword: FieldProps;
 };
-
-const EmailValidator = z.string().email();
 
 const CreateAccount = () => {
   const route = useRouter();
@@ -64,23 +60,6 @@ const CreateAccount = () => {
       helperText: "A valid email is required",
       type: "email",
     },
-    password: {
-      name: "password",
-      label: "Password",
-      value: "",
-      inErrorState: true,
-      helperText:
-        "Password has to be atleast 6 characters & can't be all numbers",
-      type: "password",
-    },
-    confirmPassword: {
-      name: "confirmPassword",
-      label: "Re-enter Password",
-      value: "",
-      inErrorState: true,
-      helperText: "Has to match the password you entered",
-      type: "password",
-    },
   });
 
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -98,24 +77,19 @@ const CreateAccount = () => {
       case "email":
         update.email.inErrorState = !validateEmail(fieldValue);
         break;
-      case "password":
-        update.password.inErrorState = !(
-          fieldValue.length >= 6 && Number.isNaN(Number(fieldValue))
-        );
-      case "confirmPassword":
-        update.confirmPassword.inErrorState =
-          update.confirmPassword.value !== update.password.value;
     }
 
     setAccount(update);
   };
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [showLoader, setShowLoader] = useState(false);
 
   const register = async () => {
     setHasSubmitted(true);
     setErrorMessage("");
     if (Object.values(account).every(({ inErrorState }) => !inErrorState)) {
+      setShowLoader(true);
       await fetch("/api/account/onboard", {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -123,21 +97,26 @@ const CreateAccount = () => {
           firstName: account.firstName.value,
           lastName: account.lastName.value,
           email: account.email.value,
-          password: account.password.value,
         }),
-      }).then(async (res) => {
-        const data = await res.json();
-        if (res.status === 200) {
-          goToLogIn(true);
-        } else {
-          setErrorMessage(data);
-        }
-      });
+      })
+        .then(async (res) => {
+          const data = await res.json();
+          if (res.status === 200) {
+            goToLogIn(true);
+          } else {
+            setErrorMessage(data);
+          }
+        })
+        .finally(() => {
+          setShowLoader(false);
+        });
     }
   };
 
   return (
     <Theme>
+      <Loader open={showLoader} />
+
       <div className={styles.container}>
         <Card>
           <div className={styles.formContainer}>

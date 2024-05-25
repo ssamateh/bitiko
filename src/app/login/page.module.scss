@@ -13,3 +13,14 @@
   @include container;
   padding: 24px;
 }
+
+.verificationCode {
+  display: flex;
+  flex-direction: column;
+
+  .codeLabels {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

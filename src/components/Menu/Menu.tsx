@@ -20,7 +20,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./Menu.module.scss";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Theme from "@/app/Providers/Theme";
 
 const getCookie = (name: string): SanitizedUser | undefined => {
@@ -41,8 +41,11 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
   const isMobile = useMediaQuery("(max-width: 767px)");
 
   const handleClickMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Remove this after guarded nav is flushed out
     if (user) {
       setDesktopMenuAnchorEl(e.currentTarget);
+    } else {
+      route.push("/login");
     }
   };
 
@@ -117,8 +120,11 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
     />
   );
 
+  const route = useRouter();
+
   const handleLogOut = async () => {
     await fetch("/api/account/sign-out").then(() => {
+      route.replace("/");
       setUser(undefined);
     });
   };
