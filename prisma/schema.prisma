@@ -88,12 +88,12 @@ model SecondaryCategory {
 model User {
   id          Int         @id @default(autoincrement())
   createdAt   DateTime    @default(now()) @map("created_at")
+  deletedAt   DateTime?
   firstName   String      @map("first_name")
   middleName  String?     @map("middle_name")
   lastName    String      @map("last_name")
   email       String      @unique
   accountType AccountType @default(USER)
-  password    String      @db.Char(128)
   lastLogInAt DateTime?   @map("last_log_in_at")
 }
 

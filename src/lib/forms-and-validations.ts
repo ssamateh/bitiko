@@ -1,4 +1,3 @@
-import { ChangeEventHandler } from "react";
 import { z } from "zod";
 
 const EmailValidator = z.string().email();

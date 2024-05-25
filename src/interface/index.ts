@@ -4,6 +4,7 @@ interface CategoryEntry extends Omit<Category, "isPrimaryCategory"> {}
 
 export enum Colors {
   primaryBg = "rgba(0,128,128, .7)",
+  primaryColor = "rgb(0,128,128)",
 }
 
 export interface MenuEntry extends CategoryEntry {
@@ -46,4 +47,9 @@ export interface SanitizedUser {
   firstName: string;
   lastName: string;
   middleName: string | null;
+}
+
+export interface OtpLogin {
+  otp: string;
+  shortLivedToken: string;
 }

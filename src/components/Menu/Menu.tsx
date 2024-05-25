@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Button,
   Card,
   IconButton,
   Popover,
@@ -9,13 +10,18 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Colors, MenuEntry, SanitizedUser } from "@/interface";
-import { MenuOutlined, ShoppingBagOutlined } from "@mui/icons-material";
+import {
+  ArrowDropDown,
+  MenuOutlined,
+  ShoppingBagOutlined,
+} from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
 import styles from "./Menu.module.scss";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Theme from "@/app/Providers/Theme";
 
 const getCookie = (name: string): SanitizedUser | undefined => {
   const user = document.cookie
@@ -27,20 +33,34 @@ const getCookie = (name: string): SanitizedUser | undefined => {
 };
 
 export default function Menu({ categories }: { categories: MenuEntry[] }) {
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [desktopMenuAnchorEl, setDesktopMenuAnchorEl] =
+    useState<HTMLButtonElement | null>(null);
+  const [userAccountAnchorEl, setUserAccountAnchorEl] =
+    useState<HTMLButtonElement | null>(null);
 
   const isMobile = useMediaQuery("(max-width: 767px)");
 
   const handleClickMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Remove this after guarded nav is flushed out
     if (user) {
-      setAnchorEl(e.currentTarget);
+      setDesktopMenuAnchorEl(e.currentTarget);
+    } else {
+      route.push("/login");
     }
   };
 
-  const handleClose = () => {
-    if (anchorEl) {
-      setAnchorEl(null);
+  const handleCloseDesktopMenu = () => {
+    if (desktopMenuAnchorEl) {
+      setDesktopMenuAnchorEl(null);
     }
+  };
+
+  const handleCloseUserPopover = () => {
+    setUserAccountAnchorEl(null);
+  };
+
+  const handleClickOnUser = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setUserAccountAnchorEl(e.currentTarget);
   };
 
   const [user, setUser] = useState<SanitizedUser>();
@@ -48,14 +68,14 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    handleClose();
+    handleCloseDesktopMenu();
     setTimeout(() => {
       setUser(getCookie("user"));
     }, 200);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  const isOpen = !!anchorEl;
+  const isOpen = !!desktopMenuAnchorEl;
   const id = isOpen ? "menu" : undefined;
 
   const renderMenuIcon = () => (
@@ -100,8 +120,36 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
     />
   );
 
+  const route = useRouter();
+
+  const handleLogOut = async () => {
+    await fetch("/api/account/sign-out").then(() => {
+      route.replace("/");
+      setUser(undefined);
+    });
+  };
+
   const renderAccountAccess = () =>
-    !!user && <Typography color="#fff">Hello, {user.firstName}</Typography>;
+    !!user && (
+      <>
+        <IconButton onClick={handleClickOnUser}>
+          <Typography color="#fff">Hello, {user.firstName}</Typography>
+          <ArrowDropDown fontSize="medium" sx={{ color: "#fff" }} />
+        </IconButton>
+        <Popover
+          anchorEl={userAccountAnchorEl}
+          open={!!userAccountAnchorEl}
+          onClose={handleCloseUserPopover}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        >
+          <Card raised className={styles.User} sx={{ boxShadow: 1 }}>
+            <Button variant="outlined" onClick={handleLogOut}>
+              Sign Out
+            </Button>
+          </Card>
+        </Popover>
+      </>
+    );
 
   const renderDesktopMenu = () => (
     <>
@@ -123,9 +171,9 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
       </Card>
       {!!categories.length && (
         <Popover
-          anchorEl={anchorEl}
+          anchorEl={desktopMenuAnchorEl}
           open={isOpen}
-          onClose={handleClose}
+          onClose={handleCloseDesktopMenu}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           transformOrigin={{
             vertical: "top",
@@ -144,7 +192,7 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
                 <Link
                   href={`/product-category/${cat.name}`}
                   className={styles["Menu-items-item-primary"]}
-                  onClickCapture={handleClose}
+                  onClickCapture={handleCloseDesktopMenu}
                 >
                   {cat.name}
                 </Link>
@@ -153,7 +201,7 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
                     href={`/product-category/${cat.name}/${subCat.name}`}
                     key={subCat.id}
                     className={styles["Menu-items-item-secondary"]}
-                    onClickCapture={handleClose}
+                    onClickCapture={handleCloseDesktopMenu}
                   >
                     {subCat.name}
                   </Link>
@@ -202,11 +250,13 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
   );
 
   return (
-    <Card
-      className={styles["Menu-container"]}
-      sx={{ backgroundColor: Colors.primaryBg, borderRadius: 0 }}
-    >
-      {isMobile ? renderMobileMenu() : renderDesktopMenu()}
-    </Card>
+    <Theme>
+      <Card
+        className={styles["Menu-container"]}
+        sx={{ backgroundColor: Colors.primaryBg, borderRadius: 0 }}
+      >
+        {isMobile ? renderMobileMenu() : renderDesktopMenu()}
+      </Card>
+    </Theme>
   );
 }
