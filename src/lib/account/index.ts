@@ -11,6 +11,10 @@ export const sendVerificationEmail = (email: string): Promise<string> =>
     .findFirstOrThrow({ where: { email } })
     .then(async (account) => {
       const code = (Math.random() * 10).toString(32).slice(-6).toUpperCase();
+      const shortLivedToken = jwt.sign({ code, email }, env.PRIVATE_KEY!, {
+        expiresIn: "20m",
+      });
+
       await sendEmail({
         to: email,
         from: "Lumo <support@lumo-gambia.com>",
@@ -20,9 +24,10 @@ export const sendVerificationEmail = (email: string): Promise<string> =>
           firstName: account.firstName,
         }),
       });
-      return jwt.sign({ code, email }, env.PRIVATE_KEY!, { expiresIn: "20m" });
+      return shortLivedToken;
     })
     .catch((e) => {
+      console.error(e);
       throw new Error(
         "lumo does not have a user with that email. If the email address is correct, you might want to create an account"
       );
@@ -50,7 +55,7 @@ export const login = async ({
     }
     throw new Error("Invalid code");
   } catch (e) {
-    // Log error message
+    console.error(e);
     throw new Error("Invalid or expired code. Please try resending a new code");
   }
 };
@@ -84,7 +89,6 @@ export const onboard = async ({
         });
       } catch (e) {
         console.error(e);
-        // TODO: log email failure
       }
       return;
     });
