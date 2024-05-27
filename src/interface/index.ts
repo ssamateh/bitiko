@@ -31,11 +31,11 @@ export interface ProductCardData
 
 export type VoidMethod = () => void;
 
-export interface OnboardingUser {
+export interface OnboardingProps {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
+  loginPage: string;
 }
 
 export interface LoginUser {

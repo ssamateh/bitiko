@@ -97,6 +97,7 @@ const CreateAccount = () => {
           firstName: account.firstName.value,
           lastName: account.lastName.value,
           email: account.email.value,
+          loginPage: [location.origin, "login"].join("/"),
         }),
       })
         .then(async (res) => {

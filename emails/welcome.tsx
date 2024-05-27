@@ -12,9 +12,13 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-const baseUrl = process.env.BASE_URL ?? "";
-
-export const WelcomeEmail = ({ firstName }: { firstName: string }) => (
+export const WelcomeEmail = ({
+  firstName,
+  loginPage,
+}: {
+  firstName: string;
+  loginPage: string;
+}) => (
   <Html>
     <Head />
     <Preview>You&apos;re now ready to start using lumo!</Preview>
@@ -31,7 +35,7 @@ export const WelcomeEmail = ({ firstName }: { firstName: string }) => (
           <Text style={paragraph}>
             You can login to your account by clicking the button below:
           </Text>
-          <Button style={button} href={`${baseUrl}/login`}>
+          <Button style={button} href={loginPage}>
             Login to lumo
           </Button>
         </Section>

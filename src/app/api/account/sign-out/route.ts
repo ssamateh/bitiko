@@ -1,4 +1,4 @@
-import { OnboardingUser } from "@/interface";
+import { OnboardingProps } from "@/interface";
 import { onboard } from "@/lib/account";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
