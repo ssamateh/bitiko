@@ -1,6 +1,8 @@
 import { sendVerificationEmail } from "@/lib/account";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest, res: NextResponse) {
   const { email }: { email: string } = await req.json();
   return sendVerificationEmail(email.toLowerCase())
