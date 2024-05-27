@@ -34,7 +34,7 @@ model Color {
   id        Int      @id @default(autoincrement())
   color     String   @db.VarChar(48)
   details   String?  @db.VarChar(256)
-  productId Int
+  productId Int      @map("product_id")
   quantity  Int      @default(0)
   price     Float?
   images    String[]
@@ -46,7 +46,7 @@ model Size {
   id        Int      @id @default(autoincrement())
   size      String   @db.VarChar(48)
   details   String?  @db.VarChar(256)
-  productId Int
+  productId Int      @map("product_id")
   quantity  Int      @default(0)
   price     Float?
   images    String[]
@@ -57,7 +57,7 @@ model Size {
 model Product {
   id                Int       @id @default(autoincrement())
   createdAt         DateTime  @default(now()) @map("created_at")
-  deletedAt         DateTime?
+  deletedAt         DateTime? @map("deleted_at")
   name              String    @db.VarChar(256)
   primaryCategoryId Int       @map("primary_category_id")
   brandId           Int       @map("brand_id")
@@ -76,8 +76,8 @@ model Product {
 }
 
 model SecondaryCategory {
-  productId  Int
-  categoryId Int
+  productId  Int @map("product_id")
+  categoryId Int @map("category_id")
 
   Product  Product  @relation(fields: [productId], references: [id])
   Category Category @relation(fields: [categoryId], references: [id])
@@ -88,12 +88,12 @@ model SecondaryCategory {
 model User {
   id          Int         @id @default(autoincrement())
   createdAt   DateTime    @default(now()) @map("created_at")
-  deletedAt   DateTime?
+  deletedAt   DateTime?   @map("deleted_at")
   firstName   String      @map("first_name")
   middleName  String?     @map("middle_name")
   lastName    String      @map("last_name")
   email       String      @unique
-  accountType AccountType @default(USER)
+  accountType AccountType @default(USER) @map("account_type")
   lastLogInAt DateTime?   @map("last_log_in_at")
 }
 

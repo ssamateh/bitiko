@@ -9,8 +9,8 @@
     "lint": "next lint",
     "static": "next build && next export",
     "run-script": "tsx",
-    "postinstall": "prisma generate",
-    "emails": "email dev"
+    "emails": "email dev",
+    "test": "jest"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -38,9 +38,14 @@
     "zod": "^3.23.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/react": "^15.0.7",
+    "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^18.11.19",
     "csv-parser": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "prisma": "^5.13.0",
     "sass": "^1.57.1",
     "ts-node": "^10.9.1",

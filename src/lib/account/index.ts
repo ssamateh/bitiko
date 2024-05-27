@@ -1,5 +1,5 @@
 import prisma from "@/db";
-import { OnboardingUser, OtpLogin, SanitizedUser } from "@/interface";
+import { OnboardingProps, OtpLogin, SanitizedUser } from "@/interface";
 import jwt from "jsonwebtoken";
 import { env } from "process";
 import WelcomeEmail from "emails/welcome";
@@ -55,9 +55,14 @@ export const login = async ({
   }
 };
 
-export const onboard = async (user: OnboardingUser): Promise<void> =>
+export const onboard = async ({
+  email,
+  firstName,
+  lastName,
+  loginPage,
+}: OnboardingProps): Promise<void> =>
   prisma.user
-    .findFirst({ where: { email: user.email } })
+    .findFirst({ where: { email } })
     .then((existingUser) => {
       if (existingUser) {
         throw new Error(
@@ -65,9 +70,7 @@ export const onboard = async (user: OnboardingUser): Promise<void> =>
         );
       }
     })
-    .then(() =>
-      prisma.user.create({ data: { ...user, email: user.email.toLowerCase() } })
-    )
+    .then(() => prisma.user.create({ data: { firstName, lastName, email } }))
     .then(async (account) => {
       try {
         await sendEmail({
@@ -75,7 +78,8 @@ export const onboard = async (user: OnboardingUser): Promise<void> =>
           from: "Lumo <support@lumo-gambia.com>",
           subject: "Welcome to Lumo Gambia",
           template: WelcomeEmail({
-            firstName: account.firstName,
+            firstName,
+            loginPage,
           }),
         });
       } catch (e) {

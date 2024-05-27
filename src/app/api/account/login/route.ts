@@ -1,4 +1,4 @@
-import { LoginUser, OtpLogin } from "@/interface";
+import { OtpLogin } from "@/interface";
 import { login } from "@/lib/account";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
