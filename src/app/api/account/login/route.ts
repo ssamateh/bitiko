@@ -3,6 +3,8 @@ import { login } from "@/lib/account";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest, res: NextResponse) {
   const credential: OtpLogin = await req.json();
   return login(credential)
