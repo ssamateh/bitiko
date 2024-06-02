@@ -3,8 +3,8 @@ import { Category, Product, Color, Size, User } from "@prisma/client";
 interface CategoryEntry extends Omit<Category, "isPrimaryCategory"> {}
 
 export enum Colors {
-  primaryBg = "rgba(0,128,128, .7)",
-  primaryColor = "rgb(0,128,128)",
+  primaryBg = "rgb(0,0,0)",
+  primaryColor = "rgb(0,0,0)",
 }
 
 export interface MenuEntry extends CategoryEntry {

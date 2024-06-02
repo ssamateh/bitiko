@@ -2,6 +2,7 @@
 
 import {
   Button,
+  ButtonBase,
   Card,
   IconButton,
   Popover,
@@ -9,7 +10,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { Colors, MenuEntry, SanitizedUser } from "@/interface";
+import { MenuEntry, SanitizedUser } from "@/interface";
 import {
   ArrowDropDown,
   MenuOutlined,
@@ -22,6 +23,7 @@ import styles from "./Menu.module.scss";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Theme from "@/app/Providers/Theme";
+import logo from "@/resources/logo.png";
 
 const getCookie = (name: string): SanitizedUser | undefined => {
   const user = document.cookie
@@ -88,14 +90,19 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
         border: "none",
       }}
     >
-      <MenuOutlined fontSize="large" sx={{ color: "#fff" }} />
+      <MenuOutlined fontSize="large" />
     </IconButton>
   );
 
-  const renderLogo = () => (
-    <Typography sx={{ color: "#fff" }} variant="h4">
-      akiesu
-    </Typography>
+  const renderLogo = (height = 80) => (
+    <ButtonBase
+      className={styles["logo"]}
+      onClick={() => {
+        route.push("/");
+      }}
+    >
+      <Image priority height={height} src={logo} alt="logo" />
+    </ButtonBase>
   );
 
   const renderCart = () => (
@@ -105,7 +112,7 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
         border: "none",
       }}
     >
-      <ShoppingBagOutlined fontSize="medium" sx={{ color: "#fff" }} />
+      <ShoppingBagOutlined fontSize="medium" />
     </IconButton>
   );
 
@@ -153,7 +160,6 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
 
   const renderDesktopMenu = () => (
     <>
-      {/* <span>Superior Quality For Better Price</span> */}
       <Card
         sx={{
           backgroundColor: "transparent",
@@ -229,10 +235,13 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          {renderMenuIcon()}
-          {renderLogo()}
+          <div>
+            {renderMenuIcon()}
+            {renderLogo(60)}
+          </div>
           {renderCart()}
         </Card>
         <Card
@@ -249,14 +258,5 @@ export default function Menu({ categories }: { categories: MenuEntry[] }) {
     </>
   );
 
-  return (
-    <Theme>
-      <Card
-        className={styles["Menu-container"]}
-        sx={{ backgroundColor: Colors.primaryBg, borderRadius: 0 }}
-      >
-        {isMobile ? renderMobileMenu() : renderDesktopMenu()}
-      </Card>
-    </Theme>
-  );
+  return <Theme>{isMobile ? renderMobileMenu() : renderDesktopMenu()}</Theme>;
 }

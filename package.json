@@ -10,7 +10,9 @@
     "static": "next build && next export",
     "run-script": "tsx",
     "emails": "email dev",
-    "test": "jest"
+    "test": "jest",
+    "db:reset": "prisma db push --force-reset && prisma db pull && prisma migrate dev --name init",
+    "db:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
